@@ -11,5 +11,5 @@
 
 | Application                                                    | Detection | Realtime editing | Presets | Methods | custom offsets
 | --------                                                       | --------   | --------|------|------    |------|
-| [XSDR Injector](https://github.com/creatornawaf/XSDR-Injector) | 4/10       | ✅      |         ❌     | offsets  | ❌
+| [XSDR Injector](https://github.com/creatornawaf/XSDR-Injector) | 4/10       | ✅      |         ❌     | offsets  | ✅
 ### [support us using this link.](https://discord.gg/jtTeUgAT2f)
