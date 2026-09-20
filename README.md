@@ -1,23 +1,15 @@
+#  <img width="30" height="30" alt="xsdr" src="https://github.com/user-attachments/assets/2d19153b-76c8-4ebe-9d3b-4e9243bbf1f5" /> XSDR Injector
 
-https://github.com/user-attachments/assets/a76303ca-f845-42bb-b38f-096bf0d13a42
+### THE BEST injector for roblox fast flags to ever exist
+## KEY FEATURES
+- ### fast flags
+- ### physics speed support
+- ### external menu (currently only for the exe version)
+- ### simple and sleek UI
+- ### open source (partially)
+- ### free
 
-
-# XSDR Injector
-
-Is Free Fast Flag Injector.
-
-You Can Use it Using Python Code And Its Uses A Website to Get Offsets.
-
-You Can See The Codes in Python.
-
-Join Our Discord Server [XSDR Discord](https://discord.gg/dBXUjJfDuz)
-
-<img width="974" height="503" alt="image" src="https://github.com/user-attachments/assets/ff0aea62-f301-4aa9-9348-1e2e2f880fbe" />
-
-<img width="1568" height="1078" alt="image" src="https://github.com/user-attachments/assets/3a23acfd-0cd0-44f8-8c88-518e8ca3f629" />
-
-I Fixed The World Steps Bug!
-
-
-https://github.com/user-attachments/assets/c29aff3c-dd64-42a4-b0d9-cf538e22eb5a
-
+| Application                                                    | Detection | Realtime editing | Presets | Methods | custom offsets
+| --------                                                       | --------   | --------|------|------    |------|
+| [XSDR Injector](https://github.com/creatornawaf/XSDR-Injector) | 4/10       | ✅      |         ❌     | offsets  | ❌
+### [support us using this link.](https://discord.gg/jtTeUgAT2f)
