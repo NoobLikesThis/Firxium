@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FFlag Editor XSDR Flags Team</title>
+
+<style>
+
+html {
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body{
+background: radial-gradient(circle at top left, rgba(255,0,0,0.18), transparent 20%),
+            radial-gradient(circle at bottom right, rgba(255,0,0,0.14), transparent 18%),
+            linear-gradient(180deg, #080000 0%, #160000 60%, #050000 100%);
+font-family:Segoe UI, sans-serif;
+color:#f7eaea;
+margin:0;
+padding:0;
+min-height:100vh;
+overflow-x:hidden;
+}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+pointer-events:none;
+background:radial-gradient(circle at 20% 15%, rgba(255, 0, 0, 0.15), transparent 12%),
+            radial-gradient(circle at 80% 25%, rgba(255, 50, 50, 0.12), transparent 14%);
+filter:blur(70px);
+}
+
+.top{
+background:linear-gradient(90deg, #8b0000, #d00000);
+padding:22px;
+font-size:24px;
+letter-spacing:1px;
+box-shadow:0 0 30px rgba(255,0,0,0.25);
+position:relative;
+overflow:hidden;
+}
+
+.top::after{
+content:'';
+position:absolute;
+inset:0;
+background:radial-gradient(circle at 10% 20%, rgba(255,255,255,0.08), transparent 12%),
+            radial-gradient(circle at 80% 40%, rgba(255,180,180,0.08), transparent 10%);
+pointer-events:none;
+}
+
+.top h1{
+margin:0;
+font-size:28px;
+opacity:0;
+transform:translateY(14px);
+animation:titleReveal 1s ease-out forwards;
+}
+
+@keyframes titleReveal {
+0% { opacity:0; transform:translateY(18px); }
+100% { opacity:1; transform:translateY(0); }
+}
+
+.top .welcome{
+margin-top:10px;
+font-size:14px;
+color:#ffd6d6;
+opacity:0;
+max-width:820px;
+line-height:1.5;
+transform:translateY(8px);
+animation:subtitleRise 1s ease-out 0.35s forwards;
+}
+
+@keyframes subtitleRise {
+0% { opacity:0; transform:translateY(10px); }
+100% { opacity:1; transform:translateY(0); }
+}
+
+.container{
+padding:20px;
+max-width:980px;
+margin:auto;
+}
+
+.tabs-bar{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.tab{
+padding:12px 24px;
+background:rgba(32,0,0,0.94);
+border:1px solid rgba(255,0,0,0.22);
+color:white;
+cursor:pointer;
+transition:.25s;
+border-radius:12px;
+box-shadow:0 0 18px rgba(255,0,0,0.1);
+}
+
+.tab:hover{
+border-color:rgba(255,0,0,0.4);
+transform:translateY(-1px);
+}
+
+.tab.active{
+background:rgba(200,0,0,0.95);
+border-color:#ff3333;
+box-shadow:0 0 28px rgba(255,0,0,0.35);
+}
+
+.tab-content{
+display:none;
+background:rgba(24,0,0,0.94);
+border:1px solid rgba(255,0,0,0.18);
+padding:20px;
+border-radius:20px;
+box-shadow:0 0 30px rgba(255,0,0,0.12);
+animation:panelIn .35s ease;
+}
+
+.tab-content.active{
+display:block;
+}
+
+.search{
+width:100%;
+padding:14px;
+background:rgba(26,0,0,0.96);
+border:1px solid rgba(255,0,0,0.25);
+border-radius:10px;
+color:white;
+font-size:15px;
+outline:none;
+transition:.25s;
+box-shadow: inset 0 0 18px rgba(255,0,0,0.08);
+max-width:100%;
+}
+
+.search:focus{
+border-color:#ff4d4d;
+box-shadow:0 0 18px rgba(255,0,0,0.24), inset 0 0 22px rgba(255,0,0,0.12);
+}
+
+.filters{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin:18px 0 14px;
+}
+
+.filter-button{
+background:rgba(26,0,0,0.92);
+border:1px solid rgba(255,0,0,0.16);
+color:white;
+padding:10px 16px;
+border-radius:999px;
+cursor:pointer;
+transition:transform .2s ease, box-shadow .25s ease, background .25s ease;
+box-shadow:inset 0 0 14px rgba(255,0,0,0.08);
+}
+
+.filter-button:hover{
+transform:translateY(-1px);
+border-color:#ff4d4d;
+}
+
+.filter-button.active{
+background:linear-gradient(135deg, #ff3a3a, #d00000);
+box-shadow:0 0 20px rgba(255,0,0,0.35);
+}
+
+.inject,
+.restart,
+
+.reset,
+.save-json,
+.set{
+margin-top:10px;
+padding:11px 16px;
+background:#c10000;
+border:none;
+color:white;
+cursor:pointer;
+transition:.25s;
+border-radius:10px;
+box-shadow:0 0 24px rgba(255,0,0,0.16);
+}
+
+.inject:hover,
+.restart:hover,
+.set:hover,
+.save-json:hover{
+background:#ff3a3a;
+transform:translateY(-1px);
+box-shadow:0 0 28px rgba(255,0,0,0.35);
+}
+
+.reset:hover{
+background:#a60000;
+transform:translateY(-1px);
+box-shadow:0 0 22px rgba(255,0,0,0.25);
+}
+
+.flag{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px;
+margin-top:10px;
+background:rgba(24,0,0,0.94);
+border:1px solid rgba(255,0,0,0.18);
+border-radius:14px;
+transition:.25s;
+animation:fade .35s ease;
+gap:15px;
+}
+
+.flag:hover{
+border-color:rgba(255,0,0,0.35);
+transform:translateY(-1px);
+box-shadow:0 0 26px rgba(255,0,0,0.16);
+}
+
+.flag-left{
+display:flex;
+align-items:center;
+gap:12px;
+flex-wrap:wrap;
+word-break:break-word;
+}
+
+.select-flag{
+width:18px;
+height:18px;
+cursor:pointer;
+}
+
+.value{
+width:140px;
+background:rgba(20,0,0,0.96);
+border:1px solid rgba(255,0,0,0.20);
+color:white;
+padding:10px;
+border-radius:10px;
+}
+
+.count{
+margin-top:12px;
+font-size:13px;
+color:#ffb3b3;
+}
+
+.pagination{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+align-items:center;
+margin-top:12px;
+}
+
+.pagination button,
+.pagination .page{
+padding:10px 14px;
+background:rgba(24,0,0,0.95);
+border:1px solid rgba(255,0,0,0.22);
+color:white;
+border-radius:12px;
+cursor:pointer;
+transition:.2s;
+}
+
+.pagination button:disabled{
+opacity:0.4;
+cursor:not-allowed;
+}
+
+.pagination .active-page{
+background:#ff3a3a;
+border-color:#ff5555;
+box-shadow:0 0 18px rgba(255,0,0,0.25);
+}
+
+.pagination .page-ellipsis{
+padding:10px 6px;
+color:#ffb3b3;
+}
+
+.reset{
+background:#9b0000;
+}
+
+.json-editor{
+width:100%;
+max-width:100%;
+min-height:420px;
+background:rgba(18,0,0,0.96);
+border:1px solid rgba(255,0,0,0.24);
+color:white;
+font-family:monospace;
+padding:16px;
+outline:none;
+border-radius:16px;
+box-shadow:inset 0 0 22px rgba(255,0,0,0.08);
+display:block;
+resize:vertical;
+}
+
+.history{
+width:100%;
+max-width:100%;
+min-height:420px;
+background:rgba(18,0,0,0.96);
+border:1px solid rgba(255,0,0,0.24);
+padding:16px;
+overflow-y:auto;
+border-radius:16px;
+box-shadow:inset 0 0 22px rgba(255,0,0,0.08);
+}
+
+.history-item{
+display:grid;
+grid-template-columns:1fr auto;
+gap:14px;
+align-items:center;
+margin-bottom:14px;
+padding:14px;
+background:rgba(28,0,0,0.95);
+border:1px solid rgba(255,0,0,0.18);
+border-radius:14px;
+transition:.25s;
+}
+
+.history-item:hover{
+background:rgba(40,0,0,0.98);
+box-shadow:0 0 22px rgba(255,0,0,0.18);
+}
+
+.history-item .item-actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+justify-content:flex-end;
+}
+
+.all-control,
+.multi-control{
+display:flex;
+gap:10px;
+margin-top:14px;
+flex-wrap:wrap;
+}
+
+.all-control input{
+flex:1;
+min-width:180px;
+background:rgba(20,0,0,0.94);
+border:1px solid rgba(255,0,0,0.22);
+padding:10px;
+border-radius:10px;
+color:white;
+}
+
+.history-item input{
+background:rgba(14,0,0,0.92);
+color:white;
+border:1px solid rgba(255,0,0,0.18);
+padding:8px 10px;
+border-radius:10px;
+min-width:100px;
+}
+
+.history-item button{
+background:#b50000;
+color:white;
+border:none;
+padding:8px 10px;
+border-radius:10px;
+cursor:pointer;
+transition:.2s;
+}
+
+.history-item button:hover{
+background:#ff3a3a;
+}
+
+.item-text{
+font-size:14px;
+color:#ffdddd;
+word-break:break-word;
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(8px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes panelIn{
+from{
+opacity:0;
+transform:scale(0.98);
+}
+to{
+opacity:1;
+transform:scale(1);
+}
+}
+
+@media(max-width:768px){
+
+.flag{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.flag > div:last-child{
+width:100%;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.value{
+width:100%;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="top">
+  <h1>Welcome to XSDR Injector</h1>
+  <div class="welcome">
+    Use the tabs to edit flags and import JSON.
+  </div>
+</div>
+
+<div class="tabs-bar">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('main')">Main</button>
+    <button class="tab" onclick="switchTab('json')">JSON Editor</button>
+    <button class="tab" onclick="openDiscord()">XSDR DISCORD</button>
+    <button class="tab" onclick="triggerUpload()">Upload Flags</button>
+    <button class="tab" onclick="exportFlags()">Export Flags</button> 
+  </div>
+</div>
+
+<div class="container">
+
+<div id="main-tab" class="tab-content active">
+
+<button class="inject" onclick="inject()">inject</button>
+
+<button class="inject" onclick="uninject()">Uninject</button>
+
+<button class="restart" onclick="restart_roblox()">Restart Roblox</button>
+
+
+
+<button class="reset" onclick="resetModified()">
+Reset Modified to 0
+</button>
+
+
+<button class="inject" id="autoApplyButton" onclick="toggleAutoApply()">Apply: False</button>
+
+<div class="all-control">
+  <input
+    class="value"
+    id="all-value"
+    placeholder="Set all shown results to this value"
+  >
+
+  <button class="set" onclick="setAllResults()">
+    Set All Results
+  </button>
+</div>
+
+<div class="multi-control">
+  <button class="set" onclick="copySelectedJson()">
+    Copy Selected JSON
+  </button>
+
+  <button class="set" onclick="setSelectedResults()">
+    Set Selected
+  </button>
+
+  <button class="set" onclick="selectAllVisible()">
+    Select All
+  </button>
+
+  <button class="set" onclick="clearSelected()">
+    Clear Selection
+  </button>
+</div>
+
+<input
+class="search"
+id="search"
+placeholder="search flag..."
+autocomplete="off"
+>
+
+<div class="filters">
+  <button class="filter-button active" data-filter="all" onclick="setFilter('all')">All</button>
+  <button class="filter-button" data-filter="modified" onclick="setFilter('modified')">Modified</button>
+  <button class="filter-button" data-filter="network" onclick="setFilter('network')">Network</button>
+  <button class="filter-button" data-filter="physics" onclick="setFilter('physics')">Physics</button>
+  <button class="filter-button" data-filter="humanoid" onclick="setFilter('humanoid')">Humanoid</button>
+  <button class="filter-button" data-filter="animation" onclick="setFilter('animation')">Animation</button>
+  <button class="filter-button" data-filter="rendering" onclick="setFilter('rendering')">Rendering</button>
+  <button class="filter-button" data-filter="graphic" onclick="setFilter('graphic')">Graphic</button>
+  <button class="filter-button" data-filter="debug" onclick="setFilter('debug')">Debug</button>
+  <button class="filter-button" data-filter="audio" onclick="setFilter('audio')">Audio</button>
+  <button class="filter-button" data-filter="ui" onclick="setFilter('ui')">UI</button>
+  <button class="filter-button" data-filter="gameplay" onclick="setFilter('gameplay')">Gameplay</button>
+  <button class="filter-button" data-filter="other" onclick="setFilter('other')">Other</button>
+</div>
+
+<div class="count" id="count"></div>
+<div class="pagination" id="pagination"></div>
+
+<div id="results"></div>
+
+</div>
+
+<div id="json-tab" class="tab-content">
+
+<textarea
+class="json-editor"
+id="json-editor"
+placeholder="Paste JSON here..."
+></textarea>
+
+<button class="save-json" onclick="saveJson()">
+Save JSON
+</button>
+
+</div>
+
+</div>
+
+<input
+type="file"
+id="upload-file"
+accept=".json,application/json"
+style="display:none"
+onchange="handleUpload(event)"
+>
+
+<script>
+
+let FLAGS = {}
+let NAMES = []
+
+let MODIFIED = new Set()
+let MODIFIED_VALUES = {}
+let HISTORY = []
+
+let currentPage = 1
+const PAGE_SIZE = 100
+
+let currentQuery = ""
+let currentFilter = 'all'
+
+const FILTERS = {
+  all: { label: 'All', keywords: [] },
+  Modified: { label: 'Modified', keywords: [] },
+  network: { label: 'Network', keywords: ['net', 'network', 'rpc', 'http', 'tcp', 'udp', 'socket', 'packet'] },
+  physics: { label: 'Physics', keywords: ['phys', 'gravity', 'collision', 'rigid', 'velocity', 'force', 'mass', 'drag', 'joint', 'motion'] },
+  humanoid: { label: 'Humanoid', keywords: ['humanoid', 'walk', 'run', 'jump', 'pose', 'torso', 'head', 'arm', 'leg', 'body', 'health', 'stamina'] },
+  animation: { label: 'Animation', keywords: ['anim', 'animation', 'sequence', 'pose', 'blend', 'track', 'motion', 'playback'] },
+  rendering: { label: 'Rendering', keywords: ['render', 'visual', 'shader', 'lighting', 'material', 'texture', 'camera', 'viewport', 'scene'] },
+  graphic: { label: 'Graphic', keywords: ['graphics', 'render', 'visual', 'shader', 'lighting', 'texture', 'postprocess', 'draw', 'mesh', 'material'] },
+  debug: { label: 'Debug', keywords: ['debug', 'log', 'trace', 'assert', 'error', 'warning', 'console', 'diagnostic', 'verbose'] },
+  ui: { label: 'UI', keywords: ['ui', 'gui', 'hud', 'menu', 'button', 'panel', 'overlay', 'popup', 'tooltip'] },
+  audio: { label: 'Audio', keywords: ['audio', 'sound', 'music', 'volume', 'speaker', 'mic', 'ambience', 'sfx'] },
+  gameplay: { label: 'Gameplay', keywords: ['gameplay', 'level', 'score', 'damage', 'spawn', 'respawn', 'ai', 'npc', 'enemy', 'item', 'weapon', 'skill'] },
+  other: { label: 'Other', keywords: [] }
+}
+
+async function loadFlags(){
+
+  try{
+
+    const response = await fetch("/flags")
+
+    if(!response.ok){
+      throw new Error("Failed to fetch flags")
+    }
+
+    const data = await response.json()
+
+    FLAGS = data || {}
+    NAMES = Object.keys(FLAGS)
+
+    let storedHistory = localStorage.getItem('fflag_history')
+
+    if(storedHistory){
+
+      try{
+        HISTORY = JSON.parse(storedHistory) || []
+      }catch{
+        HISTORY = []
+      }
+
+    }
+
+    render("")
+
+  }catch(err){
+
+    console.error(err)
+    alert("Failed loading flags.")
+
+  }
+
+}
+
+loadFlags()
+
+function render(q){
+
+  let res = document.getElementById("results")
+  res.innerHTML = ""
+
+  let ql = q.toLowerCase()
+
+  let filtered = NAMES.filter(n => {
+
+    let matchesQuery = n.toLowerCase().includes(ql)
+
+    let matchesFilter =
+      currentFilter === 'all' ||
+
+      (
+        currentFilter === 'modified'
+        ? MODIFIED.has(n)
+        : getFlagCategory(n) === currentFilter
+      )
+
+    return matchesQuery && matchesFilter
+
+  })
+
+  if(filtered.length === 0){
+
+    res.innerHTML = `
+      <div class="flag">
+        No matching flags found.
+      </div>
+    `
+
+    document.getElementById("count").innerText = "0 results"
+    document.getElementById("pagination").innerHTML = ""
+
+    return
+  }
+
+  let totalMatches = filtered.length
+  let totalPages = Math.max(1, Math.ceil(totalMatches / PAGE_SIZE))
+
+  if(currentPage > totalPages){
+    currentPage = totalPages
+  }
+
+  let start = (currentPage - 1) * PAGE_SIZE
+  let pageItems = filtered.slice(start, start + PAGE_SIZE)
+
+  let fragment = document.createDocumentFragment()
+
+  pageItems.forEach(n => {
+
+    let row = document.createElement("div")
+    row.className = "flag"
+    row.dataset.name = n
+
+    let left = document.createElement("div")
+    left.className = "flag-left"
+
+    let checkbox = document.createElement("input")
+    checkbox.type = "checkbox"
+    checkbox.className = "select-flag"
+    checkbox.dataset.name = n
+
+    let title = document.createElement("div")
+    title.textContent = n
+
+    left.appendChild(checkbox)
+    left.appendChild(title)
+
+    let right = document.createElement("div")
+
+    let input = document.createElement("input")
+    input.className = "value"
+    input.id = "v_" + n
+    input.placeholder = "value"
+
+    if(MODIFIED_VALUES.hasOwnProperty(n)){
+      input.value = MODIFIED_VALUES[n]
+    }
+
+    let setButton = document.createElement("button")
+    setButton.className = "set"
+    setButton.textContent = "set"
+    setButton.onclick = () => setflag(n)
+
+    let copyButton = document.createElement("button")
+    copyButton.className = "set"
+    copyButton.textContent = "copy"
+    copyButton.onclick = () => copyFlagJson(n)
+    let enabled = MODIFIED_VALUES[n] == "1"
+    let toggleButton = document.createElement("button")
+    toggleButton.className = "set"
+
+    function updateToggle(){
+
+      toggleButton.textContent =
+        enabled ? "Enabled" : "Disabled"
+
+
+    }
+
+    updateToggle()
+
+    toggleButton.onclick = async () => {
+
+      enabled = !enabled
+
+      let value = enabled ? "1" : "0"
+
+      if(AUTO_APPLY){
+
+      await setflag(n, value)
+
+      }
+
+      MODIFIED_VALUES[n] = value
+
+      updateToggle()
+
+    }
+
+
+    right.appendChild(input)
+    right.appendChild(setButton)
+    right.appendChild(copyButton)
+    right.appendChild(toggleButton)
+
+    row.appendChild(left)
+    row.appendChild(right)
+
+    fragment.appendChild(row)
+
+  })
+
+  res.appendChild(fragment)
+
+  document.getElementById("count").innerText =
+    `showing ${pageItems.length} results (page ${currentPage}/${totalPages}) / ${totalMatches} matched`
+
+  renderPagination(totalPages)
+
+}
+
+function renderPagination(totalPages){
+
+  let pagination = document.getElementById('pagination')
+  pagination.innerHTML = ''
+
+  if(totalPages <= 1){
+    return
+  }
+
+  let prev = document.createElement('button')
+
+  prev.textContent = 'Prev'
+  prev.disabled = currentPage === 1
+
+  prev.onclick = () => {
+
+    currentPage--
+    render(currentQuery)
+
+  }
+
+  pagination.appendChild(prev)
+
+  let startPage = Math.max(1, currentPage - 2)
+  let endPage = Math.min(totalPages, currentPage + 2)
+
+  if(startPage > 1){
+
+    pagination.appendChild(createPageButton(1))
+
+    if(startPage > 2){
+      pagination.appendChild(createEllipsis())
+    }
+
+  }
+
+  for(let i = startPage; i <= endPage; i++){
+    pagination.appendChild(createPageButton(i))
+  }
+
+  if(endPage < totalPages){
+
+    if(endPage < totalPages - 1){
+      pagination.appendChild(createEllipsis())
+    }
+
+    pagination.appendChild(createPageButton(totalPages))
+
+  }
+
+  let next = document.createElement('button')
+
+  next.textContent = 'Next'
+  next.disabled = currentPage === totalPages
+
+  next.onclick = () => {
+
+    currentPage++
+    render(currentQuery)
+
+  }
+
+  pagination.appendChild(next)
+
+}
+
+function createPageButton(page){
+
+  let btn = document.createElement('button')
+
+  btn.textContent = page
+  btn.className = page === currentPage ? 'page active-page' : 'page'
+
+  btn.onclick = () => {
+
+    currentPage = page
+    render(currentQuery)
+
+  }
+
+  return btn
+
+}
+
+function createEllipsis(){
+
+  let span = document.createElement('span')
+
+  span.textContent = '...'
+  span.className = 'page-ellipsis'
+
+  return span
+
+}
+
+
+
+function switchTab(tab){
+
+  document.querySelectorAll('.tab-content')
+  .forEach(el => el.classList.remove('active'))
+
+  document.querySelectorAll('.tab')
+  .forEach(el => el.classList.remove('active'))
+
+  document.getElementById(tab + '-tab')
+  .classList.add('active')
+
+  document.querySelector(
+    `.tab[onclick="switchTab('${tab}')"]`
+  ).classList.add('active')
+
+}
+
+function getFlagCategory(name){
+
+  const lower = name.toLowerCase()
+
+  for(const key of Object.keys(FILTERS)){
+
+    if(key === 'all' || key === 'other'){
+      continue
+    }
+
+    const keywords = FILTERS[key].keywords
+
+    if(keywords.some(word => lower.includes(word))){
+      return key
+    }
+
+  }
+
+  return 'other'
+
+}
+
+function openDiscord(){
+
+  window.open(
+    "https://discord.gg/mpd7ARARxp",
+    "_blank"
+  )
+
+}
+
+function isStringFlag(name){
+
+  return name.startsWith('FString') ||
+         name.startsWith('DFString')
+
+}
+
+function setFilter(filter){
+
+  currentFilter = filter
+  currentPage = 1
+
+  render(currentQuery)
+  updateFilterButtons()
+
+}
+
+function updateFilterButtons(){
+
+  document.querySelectorAll('.filter-button')
+  .forEach(btn => {
+
+    btn.classList.toggle(
+      'active',
+      btn.dataset.filter === currentFilter
+    )
+
+  })
+
+}
+
+let searchTimeout = null
+
+document.getElementById("search").oninput = e => {
+
+  clearTimeout(searchTimeout)
+
+  searchTimeout = setTimeout(() => {
+
+    currentQuery = e.target.value
+    currentPage = 1
+
+    render(currentQuery)
+
+  }, 150)
+
+}
+
+async function inject(){
+
+  try{
+
+    await fetch("/inject", {
+      method:"POST"
+    })
+
+    alert("Injected successfully.")
+
+  }catch(err){
+
+    console.error(err)
+    alert("Injection failed.")
+
+  }
+
+}
+
+async function uninject(){
+
+  try{
+
+    await fetch("http://127.0.0.1:5000/uninject",{
+      method:"POST"
+    })
+
+  }catch(err){
+
+    console.error(err)
+
+  }
+
+}
+
+async function setflag(name, val = null){
+
+  try{
+
+    if(val === null){
+
+      const input = document.getElementById("v_" + name)
+
+      if(!input){
+        return
+      }
+
+      val = input.value
+
+    }
+
+    const stringFlag = isStringFlag(name)
+
+    if(typeof val === 'string'){
+      val = val.trim()
+    }
+
+    if(val === '' && !stringFlag){
+      return
+    }
+
+    const response = await fetch("/setflag", {
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        flag:name,
+        value:val
+      })
+
+    })
+
+    if(!response.ok){
+      throw new Error("Failed setting flag")
+    }
+
+    await response.json()
+
+    MODIFIED.add(name)
+    MODIFIED_VALUES[name] = val
+
+    HISTORY = HISTORY.filter(
+      item => !(item.name === name && item.value === val)
+    )
+
+    HISTORY.push({
+      name,
+      value: val,
+      time: new Date().toLocaleString()
+    })
+
+    if(HISTORY.length > 200){
+      HISTORY = HISTORY.slice(-200)
+    }
+
+    localStorage.setItem(
+      'fflag_history',
+      JSON.stringify(HISTORY)
+    )
+
+  }catch(err){
+
+    console.error(err)
+    alert(`Failed setting flag: ${name}`)
+
+  }
+
+}
+
+function copyFlagJson(name){
+
+  const input = document.getElementById(`v_${name}`)
+
+  let value = input ? input.value.trim() : ''
+
+  if(!value && MODIFIED_VALUES.hasOwnProperty(name)){
+    value = MODIFIED_VALUES[name]
+  }
+
+  if(!value){
+
+    alert('Enter a value before copying.')
+    return
+
+  }
+
+  const payload = {
+    [name]: value
+  }
+
+  navigator.clipboard.writeText(
+    JSON.stringify(payload, null, 2)
+  )
+
+  .then(() => {
+    alert('Flag JSON copied.')
+  })
+
+  .catch(() => {
+    alert('Clipboard failed.')
+  })
+
+}
+
+let AUTO_APPLY =
+  localStorage.getItem("AUTO_APPLY") === "true"
+
+let AUTO_APPLY_LOOP_ID = null
+const AUTO_APPLY_INTERVAL = 2000
+
+function updateAutoApplyButton(){
+
+  const btn =
+    document.getElementById("autoApplyButton")
+
+  if(!btn){
+    return
+  }
+
+  btn.textContent =
+    "Auto Apply: " +
+    (AUTO_APPLY ? "True" : "False")
+
+}
+
+async function autoApplyLoop(){
+  if(!AUTO_APPLY) return
+
+  const modified = [...MODIFIED]
+  for(const name of modified){
+    if(MODIFIED_VALUES.hasOwnProperty(name)){
+      try{
+        await setflag(name, MODIFIED_VALUES[name])
+      }catch(e){
+        console.error('Auto-apply failed for', name, e)
+      }
+    }
+  }
+}
+
+function toggleAutoApply(){
+
+  AUTO_APPLY = !AUTO_APPLY
+
+  localStorage.setItem(
+    "AUTO_APPLY",
+    AUTO_APPLY
+  )
+
+  if(AUTO_APPLY){
+    if(!AUTO_APPLY_LOOP_ID){
+      AUTO_APPLY_LOOP_ID = setInterval(autoApplyLoop, AUTO_APPLY_INTERVAL)
+    }
+  }else{
+    if(AUTO_APPLY_LOOP_ID){
+      clearInterval(AUTO_APPLY_LOOP_ID)
+      AUTO_APPLY_LOOP_ID = null
+    }
+  }
+
+  updateAutoApplyButton()
+
+}
+
+updateAutoApplyButton()
+
+if(AUTO_APPLY){
+  AUTO_APPLY_LOOP_ID = setInterval(autoApplyLoop, AUTO_APPLY_INTERVAL)
+}
+
+function copySelectedJson(){
+
+  const selected = document.querySelectorAll(
+    '#results .select-flag:checked'
+  )
+
+  if(selected.length === 0){
+
+    alert('Select at least one flag.')
+    return
+
+  }
+
+  const payload = {}
+
+  selected.forEach(cb => {
+
+    const name = cb.dataset.name
+
+    const input = document.getElementById(`v_${name}`)
+
+    let value = input ? input.value.trim() : ''
+
+    if(!value && MODIFIED_VALUES.hasOwnProperty(name)){
+      value = MODIFIED_VALUES[name]
+    }
+
+    payload[name] = value === '' ? null : value
+
+  })
+
+  navigator.clipboard.writeText(
+    JSON.stringify(payload, null, 2)
+  )
+
+  .then(() => {
+    alert('Selected flags copied.')
+  })
+
+}
+
+function selectAllVisible(){
+
+  document.querySelectorAll('#results .select-flag')
+  .forEach(cb => cb.checked = true)
+
+}
+
+function clearSelected(){
+
+  document.querySelectorAll('#results .select-flag')
+  .forEach(cb => cb.checked = false)
+
+}
+
+async function setSelectedResults(){
+
+  const allValue = document.getElementById('all-value').value
+
+  if(typeof allValue !== 'string' || allValue.trim() === ''){
+    return
+  }
+
+  const selected = document.querySelectorAll(
+    '#results .select-flag:checked'
+  )
+
+  if(selected.length === 0){
+
+    alert('Select at least one flag.')
+    return
+
+  }
+
+  for(const cb of selected){
+
+    const name = cb.dataset.name
+
+    if(name){
+      await setflag(name, allValue)
+    }
+
+  }
+
+}
+
+async function restart_roblox(){
+
+  try{
+
+    await fetch("http://127.0.0.1:5000/restart_roblox",{
+      method:"POST"
+    })
+
+  }catch(err){
+
+    console.error(err)
+
+  }
+
+}
+
+async function setAllResults(){
+
+  const allValue = document.getElementById('all-value').value
+
+  if(typeof allValue !== 'string' || allValue.trim() === ''){
+    return
+  }
+
+  const rows = document.querySelectorAll('#results .flag')
+
+  for(const row of rows){
+
+    const name = row.dataset.name
+
+    if(name){
+      await setflag(name, allValue)
+    }
+
+  }
+
+}
+
+async function resetModified(){
+
+  const modifiedFlags = [...MODIFIED]
+
+  for(const name of modifiedFlags){
+    await setflag(name, '0')
+  }
+
+  MODIFIED.clear()
+
+}
+
+function triggerUpload(){
+
+  document.getElementById('upload-file').click()
+
+}
+
+function resolveFlagName(name){
+  if(!name) return null
+
+  // ensure string
+  name = String(name).trim()
+
+  // direct exact match
+  if(FLAGS.hasOwnProperty(name)) return name
+
+  const lower = name.toLowerCase()
+
+  // case-insensitive exact match
+  for(const flagName of NAMES){
+    if(flagName.toLowerCase() === lower) return flagName
+  }
+
+  const prefixes = [
+    'DFFlag', 'FFlag', 'BFlag',
+    'DFInt', 'FInt', 'FLog',
+    'FFloat', 'DFFloat',
+    'FString', 'DFString'
+  ]
+
+  // if user provided a name that already contains a prefix but with different casing or separators
+  for(const flagName of NAMES){
+    if(flagName.toLowerCase().replace(/[\s._-]/g, '') === lower.replace(/[\s._-]/g, '')){
+      return flagName
+    }
+  }
+
+  // try adding common prefixes when user supplied a short name
+  let stripped = name.replace(/^(fflag|dfflag|bflag|dfint|fint|flog|ffloat|dffloat|fstring|dfstring)/i, '')
+  stripped = stripped.replace(/^[\._\-\s]+/, '')
+
+  for(const prefix of prefixes){
+    const candidate = prefix + stripped
+    if(FLAGS.hasOwnProperty(candidate)) return candidate
+    for(const flagName of NAMES){
+      if(flagName.toLowerCase() === candidate.toLowerCase()) return flagName
+    }
+  }
+
+  return null
+
+}
+
+async function processImport(json){
+
+  const prefixes = ['DFFlag','FFlag','BFlag','DFInt','FInt','FLog','FFloat','DFFloat','FString','DFString']
+
+  function isPrefixKey(k){
+    if(!k) return false
+    return prefixes.some(p => p.toLowerCase() === String(k).toLowerCase())
+  }
+
+  let applied = 0
+
+  async function handlePair(key, value){
+
+    if(typeof value === 'object' && value !== null && !Array.isArray(value)){
+
+      if(isPrefixKey(key)){
+        for(const inner in value){
+          const candidate = key + inner
+          const resolved = resolveFlagName(candidate) || resolveFlagName(inner)
+          if(resolved){
+            await setflag(resolved, value[inner])
+            applied++
+          }
+        }
+      }else{
+        for(const inner in value){
+          const resolved = resolveFlagName(inner)
+          if(resolved){
+            await setflag(resolved, value[inner])
+            applied++
+          }else{
+            const candidate = key + inner
+            const resolved2 = resolveFlagName(candidate)
+            if(resolved2){
+              await setflag(resolved2, value[inner])
+              applied++
+            }
+          }
+        }
+      }
+
+    }else{
+
+      const resolved = resolveFlagName(key)
+      if(resolved){
+        await setflag(resolved, value)
+        applied++
+      }
+
+    }
+
+  }
+
+  if(Array.isArray(json)){
+    for(const item of json){
+      if(typeof item === 'object' && item !== null){
+        for(const k in item) await handlePair(k, item[k])
+      }
+    }
+  }else{
+    for(const k in json) await handlePair(k, json[k])
+  }
+
+  return applied
+
+}
+
+async function processImportPreview(json){
+
+  const unresolved = []
+  let applied = 0
+
+  function recordPair(key, value){
+    if(typeof value === 'object' && value !== null && !Array.isArray(value)){
+      for(const inner in value){
+        const candidate = key && key.length > 0 ? (key + inner) : inner
+        const resolved = resolveFlagName(candidate) || resolveFlagName(inner)
+        if(resolved) applied++
+        else unresolved.push(candidate)
+      }
+    }else{
+      const resolved = resolveFlagName(key)
+      if(resolved) applied++
+      else unresolved.push(key)
+    }
+  }
+
+  if(Array.isArray(json)){
+    for(const item of json){
+      if(typeof item === 'object' && item !== null){
+        for(const k in item) recordPair(k, item[k])
+      }
+    }
+  }else{
+    for(const k in json) recordPair(k, json[k])
+  }
+
+  return {applied, unresolved}
+
+}
+
+async function testJson(){
+  try{
+    const json = JSON.parse(document.getElementById('json-editor').value)
+    if(typeof json !== 'object' || json === null) throw new Error('Invalid JSON')
+    const res = await processImportPreview(json)
+    const sample = res.unresolved.slice(0,20)
+
+    // generate suggestions for sample unresolved keys
+    const suggestions = sample.map(k => {
+      const s = suggestResolution(k)
+      return `${k}${s.length ? ' -> suggestions: ' + s.join(', ') : ''}`
+    })
+
+    alert(`Preview: would apply ${res.applied} flags. ${res.unresolved.length} unresolved (showing up to 20):\n${suggestions.join('\n')}`)
+    if(res.unresolved.length > 0) console.warn('Unresolved flags sample:', sample, 'suggestions:', suggestions)
+  }catch(err){
+    console.error(err)
+    alert('Invalid JSON.')
+  }
+
+}
+
+function normalizeName(s){
+  if(!s) return ''
+  return String(s).toLowerCase().replace(/[^a-z0-9]/g,'')
+}
+
+function suggestResolution(key){
+  const normalizedKey = normalizeName(key)
+  if(!normalizedKey) return []
+  const candidates = []
+
+  // exact include/endsWith/startsWith
+  for(const name of NAMES){
+    const n = normalizeName(name)
+    if(n === normalizedKey) candidates.push(name)
+    else if(n.includes(normalizedKey)) candidates.push(name)
+    else if(normalizedKey.includes(n) && n.length > 3) candidates.push(name)
+    else if(n.endsWith(normalizedKey) || n.startsWith(normalizedKey)) candidates.push(name)
+    if(candidates.length >= 10) break
+  }
+
+  // fallback: return first few names containing any token
+  if(candidates.length === 0){
+    const tokens = key.split(/[^A-Za-z0-9]+/).filter(Boolean).map(t=>t.toLowerCase())
+    for(const name of NAMES){
+      const nl = name.toLowerCase()
+      if(tokens.some(tok => nl.includes(tok))){
+        candidates.push(name)
+      }
+      if(candidates.length >= 10) break
+    }
+  }
+
+  return candidates.slice(0,5)
+
+}
+
+function handleUpload(event){
+
+  const file = event.target.files[0]
+
+  if(!file){
+    return
+  }
+
+  const reader = new FileReader()
+
+  reader.onload = async e => {
+
+      try{
+
+        const json = JSON.parse(e.target.result)
+
+        if(typeof json !== 'object' || json === null){
+          throw new Error('Invalid JSON')
+        }
+
+        const prefixes = ['DFFlag','FFlag','BFlag','DFInt','FInt','FLog','FFloat','DFFloat','FString','DFString']
+
+        const mapping = []
+
+        async function collect(k,v){
+          if(typeof v === 'object' && v !== null && !Array.isArray(v)){
+            const isPrefix = prefixes.some(p => p.toLowerCase() === String(k).toLowerCase())
+            for(const inner in v){
+              const candidate = isPrefix ? (k + inner) : inner
+              let resolved = resolveFlagName(candidate) || resolveFlagName(inner) || null
+              if(!resolved){
+                for(const p of prefixes){
+                  const c2 = p + inner
+                  const r = resolveFlagName(c2)
+                  if(r){ resolved = r; break }
+                }
+              }
+              if(!resolved){
+                const sug = suggestResolution(candidate)
+                if(sug.length) resolved = sug[0]
+              }
+              if(resolved) mapping.push({to:resolved, value:v[inner]})
+            }
+          }else{
+            const candidate = k
+            let resolved = resolveFlagName(candidate) || null
+            if(!resolved){
+              for(const p of prefixes){
+                const c2 = p + candidate
+                const r = resolveFlagName(c2)
+                if(r){ resolved = r; break }
+              }
+            }
+            if(!resolved){
+              const sug = suggestResolution(candidate)
+              if(sug.length) resolved = sug[0]
+            }
+            if(resolved) mapping.push({to:resolved, value:v})
+          }
+        }
+
+        if(Array.isArray(json)){
+          for(const item of json){ if(typeof item === 'object' && item !== null){ for(const k in item) await collect(k,item[k]) }}
+        }else{
+          for(const k in json) await collect(k,json[k])
+        }
+
+        if(mapping.length === 0){ alert('No mappings found in file.'); return }
+
+        let applied = 0
+        for(const m of mapping){
+          try{ await setflag(m.to, m.value); applied++ }catch(e){ console.error('apply failed', m, e) }
+        }
+
+        alert(`Applied ${applied}/${mapping.length} flags from file.`)
+
+      }catch(err){
+
+        console.error(err)
+        alert('Invalid JSON file.')
+
+      }
+
+  }
+
+  reader.readAsText(file)
+
+}
+
+function exportFlags(){
+
+  const exportData = {}
+
+  MODIFIED.forEach(name => {
+
+    if(MODIFIED_VALUES.hasOwnProperty(name)){
+      exportData[name] = MODIFIED_VALUES[name]
+    }
+
+  })
+
+  const data = JSON.stringify(exportData, null, 2)
+
+  const blob = new Blob(
+    [data],
+    {type:'application/json'}
+  )
+
+  const link = document.createElement('a')
+
+  link.href = URL.createObjectURL(blob)
+
+  link.download = `flags-${Date.now()}.json`
+
+  document.body.appendChild(link)
+
+  link.click()
+
+  URL.revokeObjectURL(link.href)
+  document.body.removeChild(link)
+
+}
+
+async function saveJson(){
+  try{
+    const json = JSON.parse(document.getElementById('json-editor').value)
+    if(typeof json !== 'object' || json === null) throw new Error('Invalid JSON')
+
+    const prefixes = ['DFFlag','FFlag','BFlag','DFInt','FInt','FLog','FFloat','DFFloat','FString','DFString']
+
+    const mapping = []
+
+    async function collect(k,v){
+      if(typeof v === 'object' && v !== null && !Array.isArray(v)){
+        const isPrefix = prefixes.some(p => p.toLowerCase() === String(k).toLowerCase())
+        for(const inner in v){
+          const candidate = isPrefix ? (k + inner) : inner
+          let resolved = resolveFlagName(candidate) || resolveFlagName(inner) || null
+          if(!resolved){
+            for(const p of prefixes){
+              const c2 = p + inner
+              const r = resolveFlagName(c2)
+              if(r){ resolved = r; break }
+            }
+          }
+          if(!resolved){
+            const sug = suggestResolution(candidate)
+            if(sug.length) resolved = sug[0]
+          }
+          if(resolved) mapping.push({to:resolved, value:v[inner]})
+        }
+      }else{
+        const candidate = k
+        let resolved = resolveFlagName(candidate) || null
+        if(!resolved){
+          for(const p of prefixes){
+            const c2 = p + candidate
+            const r = resolveFlagName(c2)
+            if(r){ resolved = r; break }
+          }
+        }
+        if(!resolved){
+          const sug = suggestResolution(candidate)
+          if(sug.length) resolved = sug[0]
+        }
+        if(resolved) mapping.push({to:resolved, value:v})
+      }
+    }
+
+    if(Array.isArray(json)){
+      for(const item of json){ if(typeof item === 'object' && item !== null){ for(const k in item) await collect(k,item[k]) }}
+    }else{
+      for(const k in json) await collect(k,json[k])
+    }
+
+    if(mapping.length === 0){ alert('No mappings found to apply. Use Test Import to preview.'); return }
+
+    let applied = 0
+    for(const m of mapping){
+      try{ await setflag(m.to, m.value); applied++ }catch(e){ console.error('apply failed', m, e) }
+    }
+
+    alert(`Applied ${applied}/${mapping.length} flags.`)
+
+  }catch(err){
+    console.error(err)
+    alert('Invalid JSON.')
+  }
+}
+
+
+
+</script>
+
+</body>
+</html>
