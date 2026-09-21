@@ -1,4 +1,4 @@
-#  <img width="30" height="30" alt="xsdr" src="https://github.com/user-attachments/assets/2d19153b-76c8-4ebe-9d3b-4e9243bbf1f5" /> XSDR Injector
+#  <img width="30" height="30" alt="xsdr" src="https://github.com/user-attachments/assets/2d19153b-76c8-4ebe-9d3b-4e9243bbf1f5" /> Firxium
 
 ### THE BEST injector for roblox fast flags to ever exist
 ## KEY FEATURES
