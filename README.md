@@ -1,4 +1,4 @@
-#  <img width="30" height="30" alt="xsdr" src="https://github.com/user-attachments/assets/2d19153b-76c8-4ebe-9d3b-4e9243bbf1f5" /> Firxium
+# <img width="30" height="30" alt="firxium" src="https://github.com/user-attachments/assets/8292ad1a-da37-457c-9790-6c68563db1c4" /> Firxium
 
 ### Currently the best injector to exist.
 ### this is a fork of [XSDR injector](https://github.com/creatornawaf/XSDR-Injector/) with more features than the base version.
