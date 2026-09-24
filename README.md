@@ -6,5 +6,8 @@
 - external menu
 - no need to open a website
 - themes
-- always on top support
-- lag free
+- version downloader
+- custom offsets
+- imgui support
+- version manager
+- fflag & external keybinds
