@@ -11,4 +11,5 @@
 - imgui support
 - version manager
 - fflag & external keybinds
+  
 I was told not to speak more until V8 about its features with; diversions UI, Dearpygui, tab keybinds and more. oh wait..
