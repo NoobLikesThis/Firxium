@@ -13,4 +13,6 @@
 - fflag & external keybinds
   # ABOUT XSDR INJECTOR
   #### XSDR Injector has a paid version using C++ which is completely made with ai and I DESPISE it. Firxium uses Dearpygui which is like imgui (what paid XSDR uses) and has WAYY more features than paid and free versions of XSDR.
-I was told not to speak more about its features with; diversions UI, Dearpygui, tab keybinds and more in V8. oh wait..
+## OFFICIAL LINKS
+- https://brightxium.netlify.app/
+- https://nooblikesthis.github.io/firxium./
