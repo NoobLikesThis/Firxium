@@ -17,5 +17,5 @@
 - bootstrapper support (bloxstrap, fishstrap, exploitstrap, roblox)
 ## OFFICIAL LINKS
 - https://brightxium.netlify.app/ -- community flags
-- https://nooblikesthis.github.io/firxium./ -- github 1
+- https://nooblikesthis.github.io/Firxium./ -- github 1
 - https://github.com/NoobLikesThis/Firxium/ -- github 2
