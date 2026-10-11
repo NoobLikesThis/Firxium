@@ -3,16 +3,18 @@
 ### Currently the best injector to exist.
 ### this is a fork of [XSDR injector](https://github.com/creatornawaf/XSDR-Injector/) with more features than the base version.
 ### Features:
+- fflags
+- json editor
 - external menu
-- no need to open a website
-- themes
-- version downloader
+- RDD
 - custom offsets
-- imgui support
+- CONFIGS
 - version manager
+- anticheat patcher
 - fflag & external keybinds
-  # ABOUT XSDR INJECTOR
-  #### XSDR Injector has a paid version using C++ which is completely made with ai and I DESPISE it. Firxium uses Dearpygui which is like imgui (what paid XSDR uses) and has WAYY more features than paid and free versions of XSDR.
+- FULLBRIGHT (PAID)
+- spooky theme ooo (PAID CURRENTLY)
+- bootstrapper support (bloxstrap, fishstrap, exploitstrap, roblox)
 ## OFFICIAL LINKS
 - https://brightxium.netlify.app/
-- https://nooblikesthis.github.io/Firxium./
+- https://nooblikesthis.github.io/firxium./
