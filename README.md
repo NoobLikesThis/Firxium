@@ -16,5 +16,6 @@
 - spooky theme ooo (PAID CURRENTLY)
 - bootstrapper support (bloxstrap, fishstrap, exploitstrap, roblox)
 ## OFFICIAL LINKS
-- https://brightxium.netlify.app/
-- https://nooblikesthis.github.io/firxium./
+- https://brightxium.netlify.app/ -- community flags
+- https://nooblikesthis.github.io/firxium./ -- github 1
+- https://github.com/NoobLikesThis/Firxium/ -- github 2
